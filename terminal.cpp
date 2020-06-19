@@ -67,6 +67,10 @@ void Terminal::newline()
     m_column=0;
     if (++m_row == VGA_HEIGHT)
     {
-        m_row=0;
+        m_row--;
+        for(size_t i{VGA_WIDTH};i<VGA_WIDTH*VGA_HEIGHT;i++)
+        {
+            m_buffer[i-VGA_WIDTH]=m_buffer[i];
+        }
     }
 }
