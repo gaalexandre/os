@@ -13,9 +13,9 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
-extern "C" void kernel_main(void)
+extern "C" void kernelMain(void)
 {
         Terminal terminal;
 
-        terminal.writestring("Hello, kernel World!\n");
+        terminal.writeString("Hello, kernel World!\n");
 }

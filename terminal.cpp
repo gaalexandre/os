@@ -14,40 +14,40 @@ size_t strlen(const char* str)
 Terminal::Terminal() :
     m_row{0},
     m_column{0},
-    m_color{vga_entry_color(Vga_color::VGA_COLOR_LIGHT_GREY, Vga_color::VGA_COLOR_BLACK)},
+    m_color{vgaEntryColor(VgaColor::VGA_COLOR_LIGHT_GREY, VgaColor::VGA_COLOR_BLACK)},
     m_buffer{reinterpret_cast<uint16_t*>(0xB8000)}
 {
     for (size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
     {
-        m_buffer[index] = vga_entry(' ', m_color);
+        m_buffer[index] = vgaEntry(' ', m_color);
     }
 }
 
-void Terminal::writestring(const char* data)
+void Terminal::writeString(const char* data)
 {
     for (const char* i{data}; *i ; i++)
-        putchar(*i);
+        putChar(*i);
 }
 
-void Terminal::setcolor(uint8_t color)
+void Terminal::setColor(uint8_t color)
 {
     m_color = color;
 }
 
-void Terminal::putentryat(char c, uint8_t color, size_t x, size_t y)
+void Terminal::putEntryAt(char c, uint8_t color, size_t x, size_t y)
 {
     const size_t index = y * VGA_WIDTH + x;
-    m_buffer[index] = vga_entry(c, color);
+    m_buffer[index] = vgaEntry(c, color);
 }
 
-void Terminal::putchar(char c)
+void Terminal::putChar(char c)
 {
     if(c=='\n')
     {
         newline();
         return;
     }
-    putentryat(c, m_color, m_column, m_row);
+    putEntryAt(c, m_color, m_column, m_row);
     if (++m_column == VGA_WIDTH)
         newline();
 
@@ -56,7 +56,7 @@ void Terminal::putchar(char c)
 void Terminal::write(const char* data, size_t size)
 {
     for (size_t i{0}; i < size; i++)
-        putchar(data[i]);
+        putChar(data[i]);
 }
 
 void Terminal::newline()
