@@ -25,7 +25,8 @@ Terminal::Terminal() :
 
 void Terminal::writestring(const char* data)
 {
-    write(data, strlen(data));
+    for (const char* i{data}; *i ; i++)
+        putchar(*i);
 }
 
 void Terminal::setcolor(uint8_t color)

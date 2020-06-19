@@ -31,7 +31,7 @@ static inline uint8_t vga_entry_color(Vga_color fg, Vga_color bg)
 
 static inline uint16_t vga_entry(unsigned char uc, uint8_t color)
 {
-    return (uint16_t) uc | (uint16_t) color << 8;
+    return static_cast<uint16_t>(uc) | static_cast<uint16_t>(color) << 8;
 }
 
 class Terminal
