@@ -51,6 +51,7 @@ private:
     void putentryat(char c, uint8_t color, size_t x, size_t y);
     void putchar(char c);
     void write(const char* data, size_t size);
+    void newline();
 };
 
 #endif

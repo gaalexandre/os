@@ -45,17 +45,28 @@ void Terminal::putentryat(char c, uint8_t color, size_t x, size_t y)
 
 void Terminal::putchar(char c)
 {
+    if(c=='\n')
+    {
+        newline();
+        return;
+    }
     putentryat(c, m_color, m_column, m_row);
     if (++m_column == VGA_WIDTH)
-    {
-        m_column = 0;
-        if (++m_row == VGA_HEIGHT)
-            m_row = 0;
-    }
+        newline();
+
 }
 
 void Terminal::write(const char* data, size_t size)
 {
     for (size_t i{0}; i < size; i++)
         putchar(data[i]);
+}
+
+void Terminal::newline()
+{
+    m_column=0;
+    if (++m_row == VGA_HEIGHT)
+    {
+        m_row=0;
+    }
 }
