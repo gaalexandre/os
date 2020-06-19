@@ -1,7 +1,8 @@
 PREFIX:=$(HOME)/os-dev/cross/bin
 CC:=$(PREFIX)/i686-elf-g++
 AS:=$(PREFIX)/i686-elf-as
-CFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CFLAGS?=-O2
+CFLAGS=$(CFLAGS?) -ffreestanding -Wall -Wextra -fno-exceptions -fno-rtti -std=c++20
 LFLAGS=-ffreestanding -O2 -nostdlib -lgcc
 CRTI_OBJ=crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
