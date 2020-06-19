@@ -1,18 +1,28 @@
-export PREFIX="$(HOME)/os-dev/cross"
+PREFIX:=$(HOME)/os-dev/cross/bin
+CC:=$(PREFIX)/i686-elf-g++
+AS:=$(PREFIX)/i686-elf-as
+CFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+LFLAGS=-ffreestanding -O2 -nostdlib -lgcc
+CRTI_OBJ=crti.o
+CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
+CRTN_OBJ=crtn.o
 
-build: bootstrap kernel bin iso
+OBJS:=kernel.o terminal.o
 
-bootstrap:
-	$(PREFIX)/bin/i686-elf-as boot.s -o boot.o
+OBJ_LINK_LIST:= boot.o $(CRTI_OBJ) $(CRTBEGIN_OBJ) $(OBJS) $(CRTEND_OBJ) $(CRTN_OBJ)
+INTERNAL_OBJS:= boot.o $(CRTI_OBJ) $(OBJS) $(CRTN_OBJ)
 
-kernel:
-	$(PREFIX)/bin/i686-elf-g++ -c kernel.cpp -o kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
-	$(PREFIX)/bin/i686-elf-g++ -c terminal.cpp -o terminal.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+build: iso
 
-bin: bootstrap kernel
-	$(PREFIX)/bin/i686-elf-g++ -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib boot.o kernel.o terminal.o -lgcc
+kernel: $(OBJ_LINK_LIST)
+	$(CC) -T linker.ld -o myos.bin $(OBJ_LINK_LIST) $(LFLAGS)
 
-iso: bin
+%.o: %.cpp
+	$(CC) $(CFLAGS) -o $@ -c $<
+%.o: %.s
+	$(AS) $< -o $@
+iso: kernel
 	mkdir -p isodir/boot/grub
 	cp myos.bin isodir/boot/myos.bin
 	cp grub.cfg isodir/boot/grub/grub.cfg
@@ -25,4 +35,4 @@ qemu: build
 	qemu-system-i386 -cdrom myos.iso
 
 clean:
-	rm -rf isodir *.o *.bin *.iso GPUCache
+	rm -rf isodir $(INTERNAL_OBJS) myos.bin myos.iso GPUCache
