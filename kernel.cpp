@@ -16,9 +16,6 @@
 extern "C" void kernel_main(void)
 {
         Terminal terminal;
-        /* Initialize terminal interface */
-        terminal.initialize();
 
-        /* Newline support is left as an exercise. */
         terminal.writestring("Hello, kernel World!\n");
 }

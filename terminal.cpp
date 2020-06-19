@@ -11,19 +11,15 @@ size_t strlen(const char* str)
     return len;
 }
 
-void Terminal::initialize()
+Terminal::Terminal() :
+    m_row{0},
+    m_column{0},
+    m_color{vga_entry_color(Vga_color::VGA_COLOR_LIGHT_GREY, Vga_color::VGA_COLOR_BLACK)},
+    m_buffer{reinterpret_cast<uint16_t*>(0xB8000)}
 {
-    m_row = 0;
-    m_column = 0;
-    m_color = vga_entry_color(Vga_color::VGA_COLOR_LIGHT_GREY, Vga_color::VGA_COLOR_BLACK);
-    m_buffer = (uint16_t*) 0xB8000;
-    for (size_t y{0}; y < VGA_HEIGHT; y++)
+    for (size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
     {
-        for (size_t x{0}; x < VGA_WIDTH; x++)
-        {
-            const size_t index = y * VGA_WIDTH + x;
-            m_buffer[index] = vga_entry(' ', m_color);
-        }
+        m_buffer[index] = vga_entry(' ', m_color);
     }
 }
 

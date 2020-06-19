@@ -38,7 +38,7 @@ class Terminal
 {
 
 public:
-    void initialize();
+    Terminal();
     void writestring(const char * data);
 
 private:
