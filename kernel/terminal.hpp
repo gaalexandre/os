@@ -40,7 +40,7 @@ class Terminal
 public:
     Terminal();
     void writeString(const char * data);
-
+    void writeAddress(const void * address);
 private:
     size_t m_row;
     size_t m_column;

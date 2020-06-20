@@ -16,5 +16,5 @@
 extern "C" void kernelMain(void)
 {
         Terminal terminal;
-        terminal.writeString("Hello, kernel World!\n");
+        terminal.writeAddress(&terminal);
 }

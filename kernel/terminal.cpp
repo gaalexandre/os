@@ -21,6 +21,20 @@ void Terminal::writeString(const char* data)
         putChar(*i);
 }
 
+void Terminal::writeAddress(const void* address)
+{
+    uintptr_t addr=reinterpret_cast<uintptr_t>(address);
+
+    for (int i{sizeof(addr)-1}; i>=0 ; i--)
+    {
+        char hi{static_cast<char>((addr >> (8*i+4)) & 0x0f)}
+        ,lo{static_cast<char>((addr >> (8*i)) & 0x0f)};
+
+        putChar(hi+(hi<10?'0':'a'-10));
+        putChar(lo+(lo<10?'0':'a'-10));
+    }
+}
+
 void Terminal::setColor(uint8_t color)
 {
     m_color = color;
