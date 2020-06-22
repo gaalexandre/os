@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "terminal.hpp"
+#include "kernel/terminal.hpp"
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)

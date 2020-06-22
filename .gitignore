@@ -1,5 +1,9 @@
 isodir
 *.o
+*.d
+*.a
+sysroot
+*.kernel
 *.bin
 *.iso
 GPUCache
