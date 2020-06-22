@@ -1,13 +1,14 @@
 #include "terminal.hpp"
 #include "vga.hpp"
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
+static const size_t VGA_WIDTH{80};
+static const size_t VGA_HEIGHT{25};
+static uint16_t* const VGA_MEMORY{reinterpret_cast<uint16_t*>(0xB8000)};
 
 Terminal::Terminal() :
     m_row{0},
     m_column{0},
     m_color{vgaEntryColor(VgaColor::VGA_COLOR_LIGHT_GREY, VgaColor::VGA_COLOR_BLACK)},
-    m_buffer{reinterpret_cast<uint16_t*>(0xB8000)}
+    m_buffer{VGA_MEMORY}
 {
     for (size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
     {
