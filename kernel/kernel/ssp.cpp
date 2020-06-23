@@ -21,7 +21,7 @@ extern "C" __attribute__((noreturn)) void __stack_chk_fail(void)
     abort();
 #elif __is_kernel
     Terminal terminal;
-    terminal.writeString("Stack smashing detected");
+    terminal.printf("Stack smashing detected");
     while(1);
 #endif
 }

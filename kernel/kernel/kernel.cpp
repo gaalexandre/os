@@ -16,5 +16,5 @@
 extern "C" void kernelMain(void)
 {
         Terminal terminal;
-        terminal.writeAddress(&terminal);
+        terminal.printf("%i\n%p\n%x",1355400,&terminal,0x123f);
 }
