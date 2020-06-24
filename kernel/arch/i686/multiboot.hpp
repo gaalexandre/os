@@ -35,4 +35,12 @@ struct Multiboot
     uint8_t color_info[6];
 };
 
+struct Mmap
+{
+    uint32_t size;
+    uint64_t base_addr;
+    uint64_t lenght;
+    uint32_t type;
+};
+
 #endif
