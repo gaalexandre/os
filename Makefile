@@ -1,6 +1,6 @@
 export HOST=i686-elf
 export QEMUARCH=i386
-
+QEMU_MEM?=2G
 # Configure the cross-compiler to use the desired system root.
 export SYSROOT="$(shell pwd)/sysroot"
 
@@ -34,7 +34,7 @@ iso: build
 	grub-mkrescue -o os.iso isodir
 
 qemu: iso
-	qemu-system-$(QEMUARCH) -cdrom os.iso
+	qemu-system-$(QEMUARCH) -cdrom os.iso -m $(QEMU_MEM)
 
 clean:
 	$(MAKE) -C kernel clean
