@@ -40,7 +40,7 @@ int Terminal::printf(const char* format, ...)
                         format++;
                         char c = (char) va_arg(parameters, int /* char promotes to int */);
                         write(&c, sizeof(c));
-                } else if (*format == 'i') {
+                } else if (*format == 'u') {
                         format++;
                         int i = va_arg(parameters, int);
                         char str[30];
@@ -55,6 +55,21 @@ int Terminal::printf(const char* format, ...)
                             write(&(str[30-len]), len);
                         else
                             putChar('0');
+                } else if (*format == 'b') {
+                    format++;
+                    int i = va_arg(parameters, int);
+                    char str[32];
+                    int len{0};
+                    for(len=0;i!=0; i/=2)
+                    {
+                        char n=i%2;
+                        len++;
+                        str[32-len]='0'+n;
+                    }
+                    if(len!=0)
+                        write(&(str[32-len]), len);
+                    else
+                        putChar('0');
                 } else if (*format == 'x') {
                     format++;
                         uint32_t i = va_arg(parameters, uint32_t);
