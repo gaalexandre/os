@@ -190,37 +190,37 @@ Terminal::Terminal() :
     m_color{vgaEntryColor(VgaColor::VGA_COLOR_LIGHT_GREY, VgaColor::VGA_COLOR_BLACK)},
     m_buffer{VGA_MEMORY}
 {
-    for (size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
+    for (std::size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
     {
         m_buffer[index] = vgaEntry(' ', m_color);
     }
 }
 
-void Terminal::setColor(uint8_t color)
+void Terminal::setColor(std::uint8_t color)
 {
     m_color = color;
 }
 
-void Terminal::putEntryAt(char c, uint8_t color, size_t x, size_t y)
+void Terminal::putEntryAt(char c, std::uint8_t color, std::size_t x, std::size_t y)
 {
-    const size_t index = y * VGA_WIDTH + x;
+    const std::size_t index = y * VGA_WIDTH + x;
     m_buffer[index] = vgaEntry(c, color);
 }
 
-void Terminal::putChar(char c)
+int Terminal::putChar(char c)
 {
     if(c=='\n')
     {
         newline();
-        return;
+        return c;
     }
     putEntryAt(c, m_color, m_column, m_row);
     if (++m_column == VGA_WIDTH)
         newline();
-
+    return c;
 }
 
-void Terminal::write(const char* data, size_t size)
+void Terminal::write(const char* data, std::size_t size)
 {
     for (size_t i{0}; i < size; i++)
         putChar(data[i]);

@@ -22,9 +22,11 @@ export CPPFLAGS=
 
 headers:
 	mkdir -p "$(SYSROOT)"
+	$(MAKE) DESTDIR=$(SYSROOT) -C libcpp install-headers
 	$(MAKE) DESTDIR=$(SYSROOT) -C kernel install-headers
 
-build:
+build: headers
+	$(MAKE) DESTDIR=$(SYSROOT) -C libcpp install
 	$(MAKE) DESTDIR=$(SYSROOT) -C kernel install
 
 iso: build
@@ -37,6 +39,7 @@ qemu: iso
 	qemu-system-$(QEMUARCH) -cdrom os.iso -m $(QEMU_MEM)
 
 clean:
+	$(MAKE) -C libcpp clean
 	$(MAKE) -C kernel clean
 	rm -rf sysroot
 	rm -rf isodir

@@ -1,6 +1,3 @@
-#include <stddef.h>
-#include <stdint.h>
-
 #include "kernel/terminal.hpp"
 #include "multiboot.hpp"
 

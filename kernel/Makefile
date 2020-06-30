@@ -13,7 +13,7 @@ BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra -fstack-protector-strong
-CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -fno-exceptions -fno-rtti
+CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude -fno-exceptions -fno-rtti -std=c++20
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lgcc
 
@@ -60,7 +60,7 @@ $(ARCHDIR)/crtbegin.o $(ARCHDIR)/crtend.o:
 	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
 
 .cpp.o:
-	$(CC) -MD -c $< -o $@ -std=c++17 $(CFLAGS) $(CPPFLAGS)
+	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 .s.o:
 	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)

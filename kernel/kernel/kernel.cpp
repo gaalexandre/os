@@ -1,6 +1,3 @@
-#include <stddef.h>
-#include <stdint.h>
-
 #include "kernel/terminal.hpp"
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -16,5 +13,5 @@
 extern "C" void kernelMain(void)
 {
         Terminal terminal;
-        terminal.printf("%i\n%p\n%x",1355400,&terminal,0x123f);
+        terminal.printf("%u\n%p\n%x",1355400,&terminal,0x123f);
 }
