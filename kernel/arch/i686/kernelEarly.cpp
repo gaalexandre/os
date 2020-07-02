@@ -1,6 +1,6 @@
 #include "kernel/terminal.hpp"
 #include "multiboot.hpp"
-
+#include "gdt.hpp"
 
 extern "C" void kernelEarly(std::uint32_t magic, Multiboot* multiboot)
 {
@@ -9,4 +9,5 @@ extern "C" void kernelEarly(std::uint32_t magic, Multiboot* multiboot)
     {
         terminal.block("Not loaded with multiboot");
     }
+    initGdt();
 }
