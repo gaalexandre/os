@@ -183,6 +183,11 @@ int Terminal::printf(const char* format, ...)
     return 0;
 }
 
+void Terminal::block(const char* text)
+{
+    printf(text);
+    while(true);
+}
 
 Terminal::Terminal() :
     m_row{0},

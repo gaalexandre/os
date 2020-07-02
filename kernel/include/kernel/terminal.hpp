@@ -11,7 +11,8 @@ public:
     Terminal();
     int printf(const char* format, ...);
     int putChar(char c);
-private:
+    // print text and enter an infinite loop
+    void block(const char* text);
     std::size_t m_row;
     std::size_t m_column;
     std::uint8_t m_color;
