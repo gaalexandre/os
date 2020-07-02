@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+constexpr std::uint32_t MULTIBOOT_BOOTLOADER_MAGIC{0x2BADB002};
+
 struct Multiboot
 {
     std::uint32_t flags;
