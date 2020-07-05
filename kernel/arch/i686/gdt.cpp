@@ -27,7 +27,7 @@ consteval GdtEntry initGdtEntry(const uint32_t base, const uint32_t limit, const
 
 void reloadSegments()
 {
-    __asm__ __volatile__(
+    asm volatile(
         "ljmp $0x08,$1f\n\t"
         "1:\n\t"
         "mov %0, %%ds\n\t"
@@ -47,6 +47,6 @@ void initGdt()
     gdt[4]=initGdtEntry(0,0xffffffff,0xf2,0b1100);
 
     static GdtDescriptor gdtd{sizeof(gdt),gdt};
-    __asm__ __volatile__("lgdt %[gdtd]" : : [gdtd] "m" (gdtd));
+    asm volatile("lgdt %[gdtd]" : : [gdtd] "m" (gdtd));
     reloadSegments();
 }
