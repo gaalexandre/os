@@ -1,8 +1,9 @@
 #ifndef PAGING_HPP
 #define PAGING_HPP
 
-void initPaging();
 #include <cstdint>
+
+void correctPaging();
 
 struct __attribute__((__packed__)) PageDirectoryEntry
 {

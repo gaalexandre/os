@@ -12,7 +12,7 @@ search for this signature in the first 8 KiB of the kernel file, aligned at a
 32-bit boundary. The signature is in its own section so the header can be
 forced to be within the first 8 KiB of the kernel file.
 */
-        .section .multiboot
+        .section .multiboot.data
         .align 4
         .long MAGIC
         .long FLAGS
@@ -30,18 +30,28 @@ System V ABI standard and de-facto extensions. The compiler will assume the
 stack is properly aligned and failure to align the stack will result in
 undefined behavior.
 */
-        .section .bss
+        .section .bootstrap_stack, "aw", @nobits
         .align 16
 stack_bottom:
         .skip 16384 # 16 KiB
 stack_top:
 
+
+        .section .multiboot.bss, "aw", @nobits
+        .align 16
+multiboot_stack_bottom:
+        .skip 4096 # 4 KiB
+multiboot_stack_top:
+multiboot_magic_number:
+        .skip 4
+multiboot_struct_address:
+        .skip 4
 /*
 The linker script specifies _start as the entry point to the kernel and the
 bootloader will jump to this position once the kernel has been loaded. It
 doesn't make sense to return from this function as the bootloader is gone.
 */
-        .section .text
+        .section .multiboot.text, "ax"
         .global _start
         .type _start, @function
 _start:
@@ -57,13 +67,22 @@ _start:
         itself. It has absolute and complete power over the
         machine.
         */
+        mov %ebx, multiboot_struct_address
+        mov %eax, multiboot_magic_number
 
+        mov $multiboot_stack_top, %esp
+        call initHigherHalfPaging
+        mov %cr0, %eax
+        or $0x80000000, %eax
+        mov %eax, %cr0
+
+        lea _higher_half, %ecx
+        jmp *%ecx
         /*
         To set up a stack, we set the esp register to point to the top of the
         stack (as it grows downwards on x86 systems). This is necessarily done
         in assembly as languages such as C cannot function without a stack.
         */
-        mov $stack_top, %esp
 
         /*
         This is a good place to initialize crucial processor state before the
@@ -75,9 +94,13 @@ _start:
         C++ features such as global constructors and exceptions will require
         runtime support to work as well.
         */
-        pushl %ebx
-        pushl %eax
-        call kernelEarly
+
+        .size _start, . - _start
+
+        .section .text
+        .global _higher_half
+        .type _higher_half, @function
+_higher_half:
         /*
         Enter the high-level kernel. The ABI requires the stack is 16-byte
         aligned at the time of the call instruction (which afterwards pushes
@@ -86,6 +109,12 @@ _start:
         stack since (pushed 0 bytes so far), so the alignment has thus been
         preserved and the call is well defined.
         */
+        mov $stack_top, %esp
+
+        pushl multiboot_struct_address
+        pushl multiboot_magic_number
+        call kernelEarly
+
         call _init
         call kernelMain
         call _fini
@@ -105,8 +134,4 @@ _start:
 1:	hlt
         jmp 1b
 
-/*
-Set the size of the _start symbol to the current location '.' minus its start.
-This is useful when debugging or when you implement call tracing.
-*/
-        .size _start, . - _start
+.size _higher_half, . - _higher_half
