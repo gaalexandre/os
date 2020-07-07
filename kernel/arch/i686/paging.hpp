@@ -4,6 +4,7 @@
 #include <cstdint>
 
 void correctPaging();
+void cleanMultibootMemory();
 
 struct __attribute__((__packed__)) PageDirectoryEntry
 {

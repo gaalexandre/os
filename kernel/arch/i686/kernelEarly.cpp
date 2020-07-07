@@ -3,7 +3,7 @@
 #include "gdt.hpp"
 #include "paging.hpp"
 
-extern "C" void kernelEarly(std::uint32_t magic, Multiboot* multiboot)
+extern "C" void kernelEarly(const std::uint32_t magic, const Multiboot* multiboot)
 {
     Terminal terminal;
     if(magic != MULTIBOOT_BOOTLOADER_MAGIC)
@@ -12,4 +12,6 @@ extern "C" void kernelEarly(std::uint32_t magic, Multiboot* multiboot)
     }
     initGdt();
     correctPaging();
+
+    cleanMultibootMemory();
 }

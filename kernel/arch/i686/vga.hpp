@@ -2,6 +2,8 @@
 #define VGA_HPP
 
 #include <stdint.h>
+#include <stddef.h>
+#include "higherHalfPaging.hpp"
 
 /* Hardware text mode color constants. */
 enum class VgaColor {
@@ -33,5 +35,9 @@ static inline uint16_t vgaEntry(unsigned char uc, uint8_t color)
     return static_cast<uint16_t>(uc) | static_cast<uint16_t>(color) << 8;
 }
 
+
+const std::size_t VGA_WIDTH{80};
+const std::size_t VGA_HEIGHT{25};
+extern std::uint16_t* VGA_MEMORY;
 
 #endif
