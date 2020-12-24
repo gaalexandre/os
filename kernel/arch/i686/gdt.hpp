@@ -2,8 +2,7 @@
 #define GDT_HPP
 
 #include <cstdint>
-
-void initGdt();
+#include <cstddef>
 
 struct __attribute__((__packed__)) GdtEntry
 {
@@ -30,6 +29,12 @@ struct __attribute__((__packed__)) GdtDescriptor
 {
     std::uint16_t size;
     GdtEntry* offset;
+};
+
+struct Gdt
+{
+    static constexpr std::size_t NB_ENTRIES{5};
+    GdtEntry entries[NB_ENTRIES];
 };
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef KERNEL_HPP
-#define KERNEL_HPP
+#ifndef TERMINAL_HPP
+#define TERMINAL_HPP
 
 #include <cstddef>
 #include <cstdint>

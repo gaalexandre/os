@@ -1,9 +1,13 @@
-#include <cstddef>
+#include "kernel/virtualMemoryManager.hpp"
 
-#include "paging.hpp"
+#include <cstddef>
+#include <cstdint>
+
+#include "virtualMemory.hpp"
 #include "higherHalfPaging.hpp"
 #include "vga.hpp"
 #include "kernel/terminal.hpp"
+
 PageDirectoryEntry  pageDirectory[1024] __attribute__ ((aligned(4096)));
 PageTableEntry pageTables[1024*256] __attribute__ ((aligned(4096)));
 
@@ -12,6 +16,35 @@ extern const std::uint32_t __attribute__((__section__(".multiboot.rodata"))) pag
 
 constexpr std::uint32_t PAGE_LENGTH{4096};
 constexpr std::uint32_t PAGE_TABLE_LENGTH{PAGE_LENGTH*1024};
+
+extern "C" __attribute__((__section__(".multiboot.text"))) void initHigherHalfPaging()
+{
+    std::uint32_t* pageDirectoryPtr=reinterpret_cast<std::uint32_t*>(pageDirectoryAddress-VIRT_BASE);
+    std::uint32_t* pageTablesPtr=reinterpret_cast<std::uint32_t*>(pageTablesAddress-VIRT_BASE);
+    for(std::uint32_t i{0};i<1024;i++)
+    {
+        pageDirectoryPtr[i]=0x2;
+    }
+    for(std::uint32_t j{0};j*0x400000<reinterpret_cast<std::uint32_t>(&_kernel_end)-VIRT_BASE;j++)
+    {
+        pageDirectoryPtr[j]|=0x1|reinterpret_cast<std::uint32_t>(&(pageTablesPtr[j*1024]));
+        pageDirectoryPtr[j+(VIRT_BASE>>22)]|=0x1|reinterpret_cast<std::uint32_t>(&(pageTablesPtr[j*1024]));
+        for(std::uint32_t i{0};i<1024;i++)
+        {
+            std::uint32_t index{i+j*1024};
+            if(index*4096+VIRT_BASE>=reinterpret_cast<std::uint32_t>(&_kernel_end))
+                pageTablesPtr[index]=0;
+            else
+                pageTablesPtr[index]=0x3|(index*0x1000);
+        }
+    }
+
+    asm volatile("mov %0, %%cr3 \n\t"
+                 :
+                 : "r" (pageDirectoryPtr)
+        );
+}
+
 
 void clearTLB()
 {
@@ -23,7 +56,7 @@ void clearTLB()
         :"%eax");
 }
 
-void correctPaging()
+VirtualMemoryManager::VirtualMemoryManager(BootInfo* bootInfo)
 {
     Terminal terminal;
 
@@ -92,6 +125,7 @@ void correctPaging()
         terminal.block("_kernel_start");
         j++;
     }
+
     std::uint16_t* VGA_MEMORY_ADR{VGA_MEMORY};
     VGA_MEMORY=reinterpret_cast<std::uint16_t*>(((j/1024+(VIRT_BASE>>22))<<22)+((j%1024)<<12)+(reinterpret_cast<std::uint32_t>(VGA_MEMORY)&0x00000fff));
     for(std::uint32_t kernelEnd{i};i < kernelEnd+VGA_WIDTH*VGA_HEIGHT*sizeof(*VGA_MEMORY);i+=PAGE_LENGTH)
@@ -107,7 +141,7 @@ void correctPaging()
     clearTLB();
 }
 
-void cleanMultibootMemory()
+void VirtualMemoryManager::cleanMemory(BootInfo* bootInfo)
 {
     std::uint32_t j{0};
     for(std::uint32_t i{VIRT_BASE};i<reinterpret_cast<std::uint32_t>(&_kernel_start);i+=PAGE_LENGTH)

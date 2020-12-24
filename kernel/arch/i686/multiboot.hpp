@@ -1,11 +1,12 @@
 #ifndef MULTIBOOT_HPP
 #define MULTIBOOT_HPP
 
+#include "kernel/bootInfo.hpp"
 #include <cstdint>
 
 constexpr std::uint32_t MULTIBOOT_BOOTLOADER_MAGIC{0x2BADB002};
 
-struct Multiboot
+struct BootInfo
 {
     std::uint32_t flags;
     std::uint32_t mem_lower;
@@ -37,7 +38,7 @@ struct Multiboot
     std::uint8_t color_info[6];
 };
 
-struct Mmap
+struct __attribute__((packed)) Mmap
 {
     std::uint32_t size;
     std::uint64_t base_addr;

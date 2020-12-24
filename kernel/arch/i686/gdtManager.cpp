@@ -1,10 +1,7 @@
+#include "kernel/gdtManager.hpp"
 #include "gdt.hpp"
-#include "cstddef"
 
-constexpr std::size_t NB_ENTRIES{5};
-GdtEntry gdt[NB_ENTRIES];
-
-consteval GdtEntry initGdtEntry(const uint32_t base, const uint32_t limit, const uint32_t accessByte, const uint32_t flags)
+consteval GdtEntry initGdtEntry(const std::uint32_t base, const std::uint32_t limit, const std::uint32_t accessByte, const std::uint32_t flags)
 {
     return GdtEntry{
             limit & 0xffff,
@@ -25,7 +22,7 @@ consteval GdtEntry initGdtEntry(const uint32_t base, const uint32_t limit, const
     };
 }
 
-void reloadSegments()
+void GdtManager::reloadSegments()
 {
     asm volatile(
         "ljmp $0x08,$1f\n\t"
@@ -38,15 +35,16 @@ void reloadSegments()
         );
 }
 
-void initGdt()
+GdtManager::GdtManager() :
+    m_gdt{{
+    initGdtEntry(0,0,0,0),
+    initGdtEntry(0,0xffffffff,0x9a,0b1100),
+    initGdtEntry(0,0xffffffff,0x92,0b1100),
+    initGdtEntry(0,0xffffffff,0xfa,0b1100),
+    initGdtEntry(0,0xffffffff,0xf2,0b1100)
+    }},
+    m_gdtd{sizeof(m_gdt.entries),m_gdt.entries}
 {
-    gdt[0]=initGdtEntry(0,0,0,0);
-    gdt[1]=initGdtEntry(0,0xffffffff,0x9a,0b1100);
-    gdt[2]=initGdtEntry(0,0xffffffff,0x92,0b1100);
-    gdt[3]=initGdtEntry(0,0xffffffff,0xfa,0b1100);
-    gdt[4]=initGdtEntry(0,0xffffffff,0xf2,0b1100);
-
-    static GdtDescriptor gdtd{sizeof(gdt),gdt};
-    asm volatile("lgdt %[gdtd]" : : [gdtd] "m" (gdtd));
+    asm volatile("lgdt %[gdtd]" : : [gdtd] "m" (m_gdtd));
     reloadSegments();
 }

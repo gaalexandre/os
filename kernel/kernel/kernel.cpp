@@ -1,4 +1,5 @@
-#include "kernel/terminal.hpp"
+#include "kernel/kernel.hpp"
+#include <cstdint>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -10,8 +11,23 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
-extern "C" void kernelMain(void)
+extern "C" void kernelMain(const std::uint32_t magic, BootInfo* bootInfo)
 {
-        Terminal terminal;
-        terminal.printf("%u\n%p\n%x",1355400,&terminal,0x123f);
+        if(!checkBootInfo(magic))
+        {
+                Terminal terminal;
+                terminal.block("Invalid boot magic number");
+        }
+        Kernel kernel{bootInfo};
+        kernel.main();
+}
+
+Kernel::Kernel(BootInfo* bootInfo) : m_memoryManager{bootInfo}
+{
+        m_memoryManager.endInit(bootInfo);
+}
+
+void Kernel::main()
+{
+    m_terminal.printf("it seems to work");
 }

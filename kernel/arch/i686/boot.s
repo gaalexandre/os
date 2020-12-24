@@ -111,12 +111,9 @@ _higher_half:
         */
         mov $stack_top, %esp
 
-        addl $0xC0000000, multiboot_struct_address
+        call _init
         pushl multiboot_struct_address
         pushl multiboot_magic_number
-        call kernelEarly
-
-        call _init
         call kernelMain
         call _fini
         /*
