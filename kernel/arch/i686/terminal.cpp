@@ -192,7 +192,7 @@ void Terminal::block(const char* text)
 Terminal::Terminal() :
     m_row{0},
     m_column{0},
-    m_color{vgaEntryColor(VgaColor::VGA_COLOR_LIGHT_GREY, VgaColor::VGA_COLOR_BLACK)},
+    m_color{vgaEntryColor(VgaColor::LIGHT_GREY, VgaColor::BLACK)},
     m_buffer{VGA_MEMORY}
 {
     for (std::size_t index{0}; index < VGA_HEIGHT*VGA_WIDTH; index++)
@@ -240,6 +240,11 @@ void Terminal::newline()
         for(size_t i{VGA_WIDTH};i<VGA_WIDTH*VGA_HEIGHT;i++)
         {
             m_buffer[i-VGA_WIDTH]=m_buffer[i];
+        }
+
+        for(size_t i{VGA_WIDTH*(VGA_HEIGHT-1)};i<VGA_WIDTH*VGA_HEIGHT;i++)
+        {
+            m_buffer[i]=0;
         }
     }
 }
