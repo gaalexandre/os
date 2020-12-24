@@ -1,7 +1,7 @@
 #include <cstdint>
 
 #if __STDC_HOSTED__
-#include <stdlib.h>
+#include <cstdlib>
 #elif __is_kernel
 #include "kernel/terminal.hpp"
 #endif
@@ -22,6 +22,6 @@ extern "C" __attribute__((noreturn)) void __stack_chk_fail(void)
 #elif __is_kernel
     Terminal terminal;
     terminal.printf("Stack smashing detected");
-    while(1);
+    while(true);
 #endif
 }
