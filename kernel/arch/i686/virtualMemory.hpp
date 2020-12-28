@@ -1,10 +1,13 @@
-#ifndef PAGING_HPP
-#define PAGING_HPP
+#ifndef VIRTUAL_MEMORY_HPP
+#define VIRTUAL_MEMORY_HPP
 
 #include <cstdint>
 
-void correctPaging();
-void cleanMultibootMemory();
+constexpr std::uint32_t KERNEL_PAGE_TABLE_SIZE{1}; // The number of page table needed for the kernel
+constexpr std::uint32_t PAGE_LENGTH{4096};
+constexpr std::uint32_t NB_ENTRIES{1024};
+constexpr std::uint32_t PAGE_TABLE_LENGTH{PAGE_LENGTH*NB_ENTRIES};
+constexpr std::uint32_t MAX_ADDRESS{0xffffffff};
 
 struct __attribute__((__packed__)) PageDirectoryEntry
 {
@@ -35,6 +38,7 @@ struct __attribute__((__packed__)) PageTableEntry
     std::uint32_t ignored:3; //put what you want
     std::uint32_t address:20;
 };
+
 
 
 #endif
