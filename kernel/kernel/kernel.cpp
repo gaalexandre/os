@@ -1,4 +1,6 @@
 #include "kernel/kernel.hpp"
+#include "kernel/segments.hpp"
+
 #include <cstdint>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -18,6 +20,9 @@ extern "C" void kernelMain(const std::uint32_t magic, BootInfo* bootInfo)
                 Terminal terminal;
                 terminal.block("Invalid boot magic number");
         }
+
+        segments::init();
+
         Kernel kernel{bootInfo};
         kernel.main();
 }
