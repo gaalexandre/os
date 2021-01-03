@@ -1,5 +1,5 @@
-#ifndef VIRTUAL_MEMORY_HPP
-#define VIRTUAL_MEMORY_HPP
+#ifndef PAGING_HPP
+#define PAGING_HPP
 
 #include <cstdint>
 

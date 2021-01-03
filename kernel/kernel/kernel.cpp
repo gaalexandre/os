@@ -1,6 +1,7 @@
 #include "kernel/kernel.hpp"
 #include "kernel/segments.hpp"
-
+#include "kernel/bootInfo.hpp"
+#include "kernel/virtualMemory.hpp"
 #include <cstdint>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -15,21 +16,26 @@
 
 extern "C" void kernelMain(const std::uint32_t magic, BootInfo* bootInfo)
 {
-        if(!checkBootInfo(magic))
-        {
-                Terminal terminal;
-                terminal.block("Invalid boot magic number");
-        }
+    (void)bootInfo; // to remove warning (temporary)
+    if(!checkBootInfo(magic))
+    {
+        Terminal terminal;
+        terminal.block("Invalid boot magic number");
+    }
 
-        segments::init();
+    segments::init();
+    virtualMemory::init();
 
-        Kernel kernel{bootInfo};
-        kernel.main();
+    Kernel kernel;
+
+    virtualMemory::cleanMemory();
+
+    kernel.main();
 }
 
-Kernel::Kernel(BootInfo* bootInfo) : m_memoryManager{bootInfo}
+Kernel::Kernel()
 {
-        m_memoryManager.endInit(bootInfo);
+
 }
 
 void Kernel::main()

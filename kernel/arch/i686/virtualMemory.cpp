@@ -1,9 +1,9 @@
-#include "kernel/virtualMemoryManager.hpp"
+#include "kernel/virtualMemory.hpp"
 
 #include <cstddef>
 #include <cstdint>
 
-#include "virtualMemory.hpp"
+#include "paging.hpp"
 #include "higherHalfPaging.hpp"
 #include "vga.hpp"
 #include "kernel/terminal.hpp"
@@ -74,7 +74,7 @@ inline void* getVirtualAddress(std::uint32_t pageDirectoryIndex,std::uint32_t pa
     return reinterpret_cast<void*>((pageDirectoryIndex <<22) | ((pageTableIndex <<12) & 0x3ff000) | (reinterpret_cast<std::uint32_t>(addressInPage) & 0xfff));
 }
 
-VirtualMemoryManager::VirtualMemoryManager(BootInfo* bootInfo)
+void virtualMemory::init()
 {
     Terminal terminal;
 
@@ -160,7 +160,7 @@ VirtualMemoryManager::VirtualMemoryManager(BootInfo* bootInfo)
     clearTLB();
 }
 
-void VirtualMemoryManager::cleanMemory(BootInfo* bootInfo)
+void virtualMemory::cleanMemory()
 {
 
     // free the lower half memory since all of it is in the higher half

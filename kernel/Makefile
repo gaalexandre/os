@@ -30,7 +30,6 @@ KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 kernel/ssp.o \
-kernel/memoryManager.o \
 
 OBJS=\
 $(ARCHDIR)/crti.o \
@@ -76,8 +75,6 @@ install: install-headers install-kernel
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
 	cp -R --preserve=timestamps include/. $(DESTDIR)$(INCLUDEDIR)/.
-	mkdir -p $(DESTDIR)$(INCLUDEDIR)/arch
-	cp --preserve=timestamps $(ARCHDIR)/*.hpp $(DESTDIR)$(INCLUDEDIR)/arch
 
 install-kernel: os.kernel
 	mkdir -p $(DESTDIR)$(BOOTDIR)
