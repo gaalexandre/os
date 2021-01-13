@@ -30,6 +30,7 @@ KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 kernel/ssp.o \
+kernel/pureVirtualFunction.o \
 
 OBJS=\
 $(ARCHDIR)/crti.o \
