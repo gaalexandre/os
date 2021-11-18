@@ -1,4 +1,5 @@
 #include "kernel/kernel.hpp"
+#include "kernel/interrupt.hpp"
 #include "kernel/segments.hpp"
 #include "kernel/bootInfo.hpp"
 #include "kernel/virtualMemory.hpp"
@@ -35,7 +36,7 @@ extern "C" void kernelMain(const std::uint32_t magic, BootInfo* bootInfo)
 
 Kernel::Kernel()
 {
-
+	interrupt::init();
 }
 
 void Kernel::main()

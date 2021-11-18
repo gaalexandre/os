@@ -7,3 +7,4 @@ sysroot
 *.bin
 *.iso
 GPUCache
+compile_commands.json
