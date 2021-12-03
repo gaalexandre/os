@@ -3,6 +3,7 @@
 #include "kernel/segments.hpp"
 #include "kernel/bootInfo.hpp"
 #include "kernel/virtualMemory.hpp"
+#include "kernel/serial.hpp"
 #include <cstdint>
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
@@ -42,4 +43,12 @@ Kernel::Kernel()
 void Kernel::main()
 {
     m_terminal.printf("it seems to work");
+	std::uint8_t word;
+
+	while (true) {
+		while((word = serial::ComPort::comPort(0)->readWord())) {
+			m_terminal.printf("%c", word);
+			serial::ComPort::comPort(0)->sendWord(word);
+		}
+	}
 }

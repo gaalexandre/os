@@ -40,7 +40,7 @@ iso: build
 	grub-mkrescue -o os.iso isodir
 
 qemu: iso
-	qemu-system-$(QEMUARCH) -cdrom os.iso -m $(QEMU_MEM)
+	qemu-system-$(QEMUARCH) -cdrom os.iso -m $(QEMU_MEM) -serial stdio
 
 clean:
 	$(MAKE) -C libcpp clean
