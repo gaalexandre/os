@@ -31,6 +31,7 @@ $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 kernel/ssp.o \
 kernel/pureVirtualFunction.o \
+kernel/staticVar.o \
 
 OBJS=\
 $(ARCHDIR)/crti.o \
