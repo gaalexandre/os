@@ -8,3 +8,4 @@ sysroot
 *.iso
 GPUCache
 compile_commands.json
+.cache
