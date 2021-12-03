@@ -22,6 +22,10 @@ export CPPFLAGS=
 
 headers:
 	mkdir -p "$(SYSROOT)"
+	mkdir -p "$(SYSROOT)$(INCLUDEDIR)"
+	cp -r /usr/lib/gcc/i686-elf/11.2.0/include/* "$(SYSROOT)$(INCLUDEDIR)"
+	cp -r /usr/lib/gcc/i686-elf/11.2.0/include/g++-v11/* "$(SYSROOT)$(INCLUDEDIR)"
+	cp -r /usr/lib/gcc/i686-elf/11.2.0/include/g++-v11/i686-elf/* "$(SYSROOT)$(INCLUDEDIR)"
 	$(MAKE) DESTDIR=$(SYSROOT) -C libcpp install-headers
 	$(MAKE) DESTDIR=$(SYSROOT) -C kernel install-headers
 
